@@ -36,14 +36,14 @@ def grid(width, density=0.5):
 
     period = int(period)
 
-    out = numpy.ones((BOX_WIDTH,BOX_WIDTH), dtype=numpy.bool)
+    out = numpy.zeros((BOX_WIDTH,BOX_WIDTH), dtype=numpy.bool)
     curx = 0
     while curx<BOX_WIDTH-width:
-        out[:,curx:curx+width] = False
+        out[:,curx:curx+width] = True
         curx += period
     cury = 0
     while cury<BOX_WIDTH-width:
-        out[cury:cury+width] = False
+        out[cury:cury+width] = True
         cury += period
     return out
 
@@ -68,4 +68,4 @@ for l_idx,linewidth in enumerate(linewidths):
 
 
 im = Image.fromarray((255*a4).astype(numpy.uint8), mode='L')
-im.save('calib2.tif')
+im.save('calib3.tif')
