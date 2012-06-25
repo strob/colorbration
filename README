@@ -1,0 +1,36 @@
+Colorbration
+By Robert M Ochshorn with Adrien Lucca
+
+Research on the detection and perceptual neutralization of color
+variations in the wild.
+
+## Digital capture and analysis
+
+Use gphoto2 and dcraw to capture RAW photogrpahs from a connected
+digital camera for analysis.
+
+Effectively, we are wrapping these commands:
+
+% gphoto2 --capture-image-and-download --filename /tmp/img.cr2
+% dcraw -c /tmp/img.cr2 > /tmp/img.ppm
+
+To a simple `capture' function provided by capture.py.
+
+We must then transform this image into our output geometry.
+
+We will use OpenCV's getPerspectiveTransform
+
+  Mat getPerspectiveTransform(const Point2f src[], const Point2f dst[])
+
+combined with its warpPerspective
+
+  void warpPerspective(const Mat& src, Mat& dst, const Mat& M, Size dsize, int flags=INTER_LINEAR, int borderMode=BORDER_CONSTANT, const Scalar& borderValue=Scalar())
+
+to make an interface for mapping photographs into projection-space.
+
+This interface lives in projection.py
+
+## Analog production and calibration
+
+calibration.py spits out a 600dpi printer test page with various
+one-bit squares containing 50% black.
