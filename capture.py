@@ -15,7 +15,13 @@ def capture():
         # XXX: error handling
 
         p = subprocess.Popen(cmd)
-        p.wait()
+        out = p.wait()
+        if out != 0:
+            print "capture failed, returning test image"
+            import calibration
+            from numpy import uint8
+            im = Image.fromarray((255*calibration.grid(20)).astype(uint8), mode='L').convert('RGB')
+            return im
 
         # XXX: white balance calibration
 
