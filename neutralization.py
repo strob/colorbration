@@ -12,7 +12,7 @@ class NewOutput(projection.Projection):
         self.render_projector()
 
     def filter(self, im):
-        return cv2.blur(im[:,:,1].astype(numpy.uint8), (5,5))#im.mean(axis=2), (5,5))
+        return cv2.blur(im[:,:,1].astype(numpy.uint8), (1,1))#im.mean(axis=2), (5,5))
 
     def correct(self, factor=None, target=None):
         pass
@@ -91,6 +91,6 @@ class Neutralize(NewOutput):
             self.correct()
 
 if __name__=='__main__':
-    n = Neutralize(W=1920, H=1200, record=True)
+    n = Neutralize(W=1920, H=1200, record = True)
     n.iterate()
     n.run()
