@@ -47,25 +47,24 @@ def grid(width, density=0.5):
         cury += period
     return out
 
-a4 = numpy.zeros((HEIGHT,WIDTH), numpy.bool)
-fns = [lines, grid]
+if __name__=='__main__':
 
-linewidths = [5,10,15,20,30,40,50,60]
+    a4 = numpy.zeros((HEIGHT,WIDTH), numpy.bool)
+    fns = [lines, grid]
 
-for l_idx,linewidth in enumerate(linewidths):
-    print linewidth
+    linewidths = [5,10,15,20,30,40,50,60]
 
-    cury = (l_idx % 4)*(BOX_WIDTH+PADDING)
+    for l_idx,linewidth in enumerate(linewidths):
+        print linewidth
 
-    for f_idx, fn in enumerate(fns):
+        cury = (l_idx % 4)*(BOX_WIDTH+PADDING)
 
-        curx = int(l_idx / 4 + 2*f_idx)*(BOX_WIDTH+PADDING)
+        for f_idx, fn in enumerate(fns):
 
-        # linewidth = BOX_WIDTH/float(2*numlines)
-        # print linewidth
+            curx = int(l_idx / 4 + 2*f_idx)*(BOX_WIDTH+PADDING)
 
-        a4[int(cury):int(cury)+BOX_WIDTH,int(curx):int(curx)+BOX_WIDTH] = fn(linewidth)
+            a4[int(cury):int(cury)+BOX_WIDTH,int(curx):int(curx)+BOX_WIDTH] = fn(linewidth)
 
 
-im = Image.fromarray((255*a4).astype(numpy.uint8), mode='L')
-im.save('calib3.tif')
+    im = Image.fromarray((255*a4).astype(numpy.uint8), mode='L')
+    im.save('calib3.tif')
