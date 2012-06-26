@@ -24,9 +24,17 @@ def capture():
             return im
 
         # XXX: white balance calibration
-
+        # dcraw -c -o 5 -4 -w -T
         cmd = ['dcraw',
-               '-c', 
+               '-c',
+
+               #'-4',            # linear 16-bit
+
+               '-W',            # fixed white level
+               "-g", "1", "1",  # linear
+               '-o', '1',       # raw
+
+               '-T',            # TIFF (with metadata)
                tmp.name]
         print cmd
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -35,3 +43,15 @@ def capture():
         sim = StringIO.StringIO(stdout)
 
         return Image.open(sim)
+
+def captureJPG():
+    "assumes camera set to capture in JPG mode; returns decoded Image"
+    cmd = ['gphoto2',
+           '--stdout',
+           '--capture-image-and-download']
+    print cmd
+
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    sim = StringIO.StringIO(stdout)
+    return Image.open(sim)
