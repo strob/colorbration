@@ -1,0 +1,11 @@
+*.pyc
+*~
+\#*\#
+\.\#*
+*.ipy
+*.tif
+*.ppm
+*.pkl
+*.mjpg
+*.cr2
+*.pdf
