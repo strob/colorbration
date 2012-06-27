@@ -7,7 +7,8 @@ class NewOutput(projection.Projection):
         projection.Projection.__init__(self, **kw)
         self.gen_correction()
     def gen_correction(self):
-        self.correction = (255*numpy.random.random((self.H,self.W,3))).astype(numpy.uint8)
+        #self.correction = (255*numpy.random.random((self.H,self.W,3))).astype(numpy.uint8)
+        self.correction = numpy.zeros((self.H,self.W,3)).astype(numpy.uint8)
     def calibrate(self):
         projection.Projection.calibrate(self)
         self.gen_correction()
@@ -89,6 +90,7 @@ class Neutralize(NewOutput):
         factor = 1
 
         self.correction[:] = (self.correction - factor*error.reshape((self.H,self.W,1))).clip(0,255)
+        #self.correction = cv2.blur(self.correction, (30,30))
         self.render_projector()
 
     def converge(self):
