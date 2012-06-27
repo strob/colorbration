@@ -7,6 +7,26 @@ import numpy
 
 LABEL_HEIGHT = BOX_WIDTH
 
+def random(width, density):
+    smw = BOX_WIDTH/width
+    sm = numpy.zeros((smw, smw))
+    npix = smw*smw
+    nwht = density * npix
+    print npix, nwht
+    err = (nwht % 1) / npix
+    print "ERROR: %.2f%%" % (100*err)
+    nwht = int(nwht)
+    sm.flat[:nwht] = 1
+    numpy.random.shuffle(sm.reshape(numpy.product(sm.shape)))
+    print sm.shape
+
+    #resize to BOX WIDTH
+    out = numpy.zeros((BOX_WIDTH, BOX_WIDTH), numpy.bool)
+    idxes = numpy.linspace(0, smw-1, BOX_WIDTH).astype(int)
+    out[:] = sm[idxes.reshape((-1,1)),idxes]
+    return out
+
+
 def label(txt, width=BOX_WIDTH, height=LABEL_HEIGHT):
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
     ctx = pangocairo.CairoContext(cairo.Context(surface))
@@ -35,15 +55,16 @@ if __name__=='__main__':
     # type, linewidth, density
     spec = [[grid, 5, 0.5],
             [lines, 5, 0.5],
-            [grid, 20, 0.5],
-            [lines, 20, 0.5]]
+            [random, 20, 0.5],
+            [lines, 20, 0.5],
+            [lines, 12, .1]]
 
     PAD = BOX_WIDTH/8
 
     out = 255*numpy.ones((len(spec)*BOX_WIDTH, 2*BOX_WIDTH+PAD,3), numpy.uint8)
 
     def _desc(lw, d, edges):
-        return "%d%% black\nweight: %d\nedges: %.2f" % (d*100, lw, edges)
+        return "%d%% white\nthickn.: %d\nedges: %.2f" % (d*100, lw, edges)
 
     for idx, (fn, linewidth, density) in enumerate(spec):
         y = idx * BOX_WIDTH
