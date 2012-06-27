@@ -22,7 +22,7 @@ def random(width, density):
 
     #resize to BOX WIDTH
     out = numpy.zeros((BOX_WIDTH, BOX_WIDTH), numpy.bool)
-    idxes = numpy.linspace(0, smw-1, BOX_WIDTH).astype(int)
+    idxes = numpy.linspace(0, smw, BOX_WIDTH, endpoint=False).astype(int)
     out[:] = sm[idxes.reshape((-1,1)),idxes]
     return out
 
