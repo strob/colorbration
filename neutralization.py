@@ -5,7 +5,13 @@ import cv2
 class NewOutput(projection.Projection):
     def __init__(self, **kw):
         projection.Projection.__init__(self, **kw)
-        self.correction = 255*numpy.zeros((self.H,self.W,3), dtype=numpy.uint8)
+        self.gen_correction()
+    def gen_correction(self):
+        self.correction = (255*numpy.random.random((self.H,self.W,3))).astype(numpy.uint8)
+    def calibrate(self):
+        projection.Projection.calibrate(self)
+        self.gen_correction()
+        self.render_projector()
 
     def iterate(self):
         projection.Projection.iterate(self)
