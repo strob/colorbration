@@ -42,6 +42,10 @@ class Constraint:
 
         self._modidx = 0
 
+    def last(self):
+        self._modidx = (self._modidx - 1) % 5
+        return self.next()
+
     def next(self):
         "return a constraint that should limit deltaCorrection"
 
