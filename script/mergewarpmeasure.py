@@ -94,7 +94,7 @@ if __name__=='__main__':
         grid = grid / 255.0
 
         import csv
-        writer = csv.writer(open('grid.csv', 'w'))#, delimiter=';')
+        writer = csv.writer(open('grid.csv', 'w'), delimiter=';')
         writer.writerows(grid.tolist())
 
         print 'saved to `grid.csv`'
