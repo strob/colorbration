@@ -26,7 +26,11 @@ class Pyramid:
             divisor = float(pow(2, level))
             w = int(numpy.ceil(self.size[0] / divisor))
             h = int(numpy.ceil(self.size[1] / divisor))
-            z = numpy.zeros((h,w,3), dtype=numpy.uint8)
+            if len(im.shape)>2:
+                shape = (h,w,im.shape[2])
+            else:
+                shape = (h,w)
+            z = numpy.zeros(shape, dtype=numpy.uint8)
             cv2.pyrUp(im, z, (w,h))
             im = z
         return im
