@@ -23,6 +23,8 @@ class PyrCorrect(Correction):
         self.error = None
         self.d_error = None
 
+        self.errorlog = []
+
         self.constraint = Constraint(size=self.pyr.down_size())
 
     def filter(self, im):
@@ -50,14 +52,26 @@ class PyrCorrect(Correction):
                    cv2.resize(self.error, (400,300)))
 
         total_error = numpy.sum(numpy.abs(self.error))
-        print 'total error', total_error
+        maxerr = numpy.abs(self.error).max()
+        self.errorlog.append(total_error)
+        print 'total error', total_error, 'max_error', maxerr
+
+        if len(self.errorlog) > 5:
+            if self.errorlog[-1] >= 1.1*self.errorlog[-2]:
+                print 'increase in error -- going back'
+                self.set_pyr_level(self.pyr.level + 1)
+                return self.correct(coeff)
+            elif self.errorlog[-1] >= 0.9*self.errorlog[-2]:
+                print 'pretty good! moving on'
+                self.set_pyr_level(self.pyr.level - 1)
+                return self.correct(coeff)
 
         self.d_correction = numpy.zeros(self.error.shape)
         constraint = self.constraint.next()
         self.d_correction[constraint] = - self.error[constraint]
 
         # normalize
-        self.d_correction *= (128.0*coeff) / max(1, abs(self.d_correction).max())
+        self.d_correction *= (maxerr*coeff) / max(1, abs(self.d_correction).max())
         # center on 128 & convert to uint
         self.d_correction += 128
         self.d_correction = self.d_correction.astype(numpy.uint8)
@@ -72,6 +86,6 @@ class PyrCorrect(Correction):
         self.render_projector()
 
 if __name__=='__main__':
-    p = PyrCorrect(W=1920, H=1200, record = False)
+    p = PyrCorrect(W=1920, H=1200, record = True)
     p.iterate()
     p.run()
