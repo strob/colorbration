@@ -20,11 +20,6 @@ class Neutralize(projection.Correction):
         #self.correction = cv2.blur(self.correction, (30,30))
         self.render_projector()
 
-    def converge(self):
-        while True:
-            self.iterate()
-            self.correct()
-
 if __name__=='__main__':
     n = Neutralize(W=1920, H=1200, record = True)
     n.iterate()

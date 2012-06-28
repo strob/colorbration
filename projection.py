@@ -142,6 +142,11 @@ class Correction(Projection):
         cv2.imshow("projector", self.correction)
         cv2.waitKey(5)
 
+    def converge(self):
+        while True:
+            self.iterate()
+            self.correct()
+
     def run(self):
         while True:
             code = cv2.waitKey( 100 )
@@ -177,6 +182,8 @@ class Correction(Projection):
                 if key == 'c':
                     self.calibrate()
                     self.correction *= 0 # reset
+                if key == 'w':
+                    self.converge()
                 elif key == 's':
                     self.correct()
                 elif key == 'm':
