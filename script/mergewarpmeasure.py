@@ -91,7 +91,9 @@ if __name__=='__main__':
         # XXX: -> XYZ (?)
 
         grid = grid.mean(axis=2)
-        grid = grid / 255.0
+        # renormalize
+        grid = grid - grid.min()
+        grid /= grid.max()
 
         import csv
         writer = csv.writer(open('grid.csv', 'w'), delimiter=';')
@@ -112,7 +114,7 @@ if __name__=='__main__':
     cv2.setMouseCallback("image", tweak)
     for path in sys.argv[1:]:
         IM = cv2.imread(path)
-        pts = compute()
+        compute()
         while True:
             k = cv2.waitKey(100)
             if k == 27:
