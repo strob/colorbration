@@ -116,6 +116,80 @@ class Projection:
         cv2.imshow("camera", csp)
         cv2.waitKey(5)
 
+class Correction(Projection):
+    def __init__(self, **kw):
+        Projection.__init__(self, **kw)
+        self.gen_correction()
+    def gen_correction(self):
+        #self.correction = (255*numpy.random.random((self.H,self.W,3))).astype(numpy.uint8)
+        self.correction = numpy.zeros((self.H,self.W,3)).astype(numpy.uint8)
+    def calibrate(self):
+        Projection.calibrate(self)
+        self.gen_correction()
+        self.render_projector()
+
+    def iterate(self):
+        Projection.iterate(self)
+        self.render_projector()
+
+    def filter(self, im):
+        return cv2.blur(im.mean(axis=2), (5,5))
+
+    def correct(self, factor=None, target=None):
+        pass
+
+    def render_projector(self):
+        cv2.imshow("projector", self.correction)
+        cv2.waitKey(5)
+
+    def run(self):
+        while True:
+            code = cv2.waitKey( 100 )
+            if code == 27 : # escape
+                break;
+            elif code > 0 and code < 255:
+                key = chr(code)
+                if key == 'c':
+                    self.calibrate()
+                    import pickle
+                    pickle.dump(self.points, open('calibration.pkl', 'w'))
+                if key == 'l':
+                    import pickle
+                    self.points = pickle.load(open('calibration.pkl'))
+                    self.draw_points()
+                    self.calibrated = True
+                if key == 'r':
+                    self.loop()
+                    break
+
+    def loop(self):
+        while True:
+            code = cv2.waitKey( 100 )
+            if code == 27 : # escape
+                break;
+            elif code > 0 and code < 255:
+                key = chr(code)
+                if key == 'i':
+                    self.iterate()
+                if key == 'o':
+                    self.iterate()
+                    self.correct()
+                if key == 'c':
+                    self.calibrate()
+                    self.correction *= 0 # reset
+                elif key == 's':
+                    self.correct()
+                elif key == 'm':
+                    self.correct(5)
+                elif key == 't':
+                    self.correct(.1)
+                elif key == 'r':
+                    self.correction *= 0
+                    self.render_projector()
+                elif key == 'e':
+                    self.show_error()
+
+
 if __name__=='__main__':
     p = Projection(W=1920, H=1200)
     p.iterate()

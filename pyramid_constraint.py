@@ -7,6 +7,12 @@ class Pyramid:
         self.level = level
         self.size = size
 
+    def down_size(self):
+        divisor = float(pow(2, self.level))
+        w = int(numpy.ceil(self.size[0] / divisor))
+        h = int(numpy.ceil(self.size[1] / divisor))
+        return (w,h)
+
     def down(self, im):
         "reduce `im' to self.level"
         for iteration in range(self.level):
