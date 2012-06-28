@@ -69,12 +69,13 @@ class Projection:
     def calibrate(self):
         off = numpy.zeros((self.H,self.W,3), dtype=numpy.uint8)
         cv2.imshow("projector", off)
-        cv2.waitKey(5)
+        cv2.waitKey(100)
         self.minimums = cv2.blur(numpy.asarray(capture()).mean(axis=2), (1,1))
 
         on = 255*numpy.ones((self.H,self.W,3), dtype=numpy.uint8)
         cv2.imshow("projector", on)
-        cv2.waitKey(5)
+        cv2.waitKey(100)
+        cv2.waitKey(100)
         self.maximums = cv2.blur(numpy.asarray(capture()).mean(axis=2), (1,1))
 
         self.points = get_diff_rect(self.minimums, self.maximums)
@@ -96,7 +97,7 @@ class Projection:
         heatmap[:,:,0][intensities > 128] = 2*(intensities[intensities > 128] - 128)
         heatmap[:,:,2][intensities < 128] = 2*(128 - intensities[intensities < 128])
         cv2.imshow("projector", heatmap)
-        cv2.waitKey(5)
+        cv2.waitKey(100)
 
     def render_projector(self):
         self.show_error()
@@ -154,47 +155,30 @@ class Correction(Projection):
                 break;
             elif code > 0 and code < 255:
                 key = chr(code)
-                if key == 'c':
-                    self.calibrate()
-                    import pickle
-                    pickle.dump(self.points, open('calibration.pkl', 'w'))
-                if key == 'l':
-                    import pickle
-                    self.points = pickle.load(open('calibration.pkl'))
-                    self.draw_points()
-                    self.calibrated = True
-                if key == 'r':
-                    self.loop()
-                    break
+                self.onkey(key)
 
-    def loop(self):
-        while True:
-            code = cv2.waitKey( 100 )
-            if code == 27 : # escape
-                break;
-            elif code > 0 and code < 255:
-                key = chr(code)
-                if key == 'i':
-                    self.iterate()
-                if key == 'o':
-                    self.iterate()
-                    self.correct()
-                if key == 'c':
-                    self.calibrate()
-                    self.correction *= 0 # reset
-                if key == 'w':
-                    self.converge()
-                elif key == 's':
-                    self.correct()
-                elif key == 'm':
-                    self.correct(5)
-                elif key == 't':
-                    self.correct(.1)
-                elif key == 'r':
-                    self.correction *= 0
-                    self.render_projector()
-                elif key == 'e':
-                    self.show_error()
+    def onkey(self, key):
+        if key == 'c':
+            self.calibrate()
+            import pickle
+            pickle.dump(self.points, open('calibration.pkl', 'w'))
+        elif key == 'l':
+            import pickle
+            self.points = pickle.load(open('calibration.pkl'))
+            self.draw_points()
+            self.calibrated = True
+        elif key == 'i':
+            self.iterate()
+        elif key == 'o':
+            self.iterate()
+            self.correct()
+        elif key == 'w':
+            self.converge()
+        elif key == 's':
+            self.correct()
+        elif key == 'r':
+            self.correction *= 0
+            self.render_projector()
 
 
 if __name__=='__main__':
