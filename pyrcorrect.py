@@ -50,7 +50,7 @@ class PyrCorrect(Correction):
         self.constraint = Constraint(size=self.pyr.down_size())
 
     def filter(self, im):
-        im = im.mean(axis=2).astype(numpy.uint8) # grayscale
+        #im = im.mean(axis=2).astype(numpy.uint8) # grayscale
 
         new_measured = self.pyr.down(im)
         if self.measured is not None:

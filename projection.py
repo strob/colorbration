@@ -104,8 +104,10 @@ class Projection:
 
     def draw_points(self):
         csp = self.capt_scale.copy()
-        csp[:,:,0] = csp[:,:,1] # only show Y value
-        csp[:,:,2] = csp[:,:,1]
+        csp[:,:,[0,2]] = csp[:,:,[2,0]] # swap R & B for OpenCV display
+
+        # csp[:,:,0] = csp[:,:,1] # only show Y value
+        # csp[:,:,2] = csp[:,:,1]
 
         for pt in self.points:
             cv2.circle(csp, (int(pt[0]/self.scale), int(pt[1]/self.scale)), 5, (0,255,0))
@@ -140,7 +142,10 @@ class Correction(Projection):
         pass
 
     def render_projector(self):
-        cv2.imshow("projector", self.correction)
+        corr = self.correction.copy()
+        corr[:,:,[0,2]] = corr[:,:,[2,0]] # flip R & B for OpenCV
+
+        cv2.imshow("projector", corr)
         cv2.waitKey(5)
 
     def converge(self):
