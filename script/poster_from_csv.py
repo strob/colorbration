@@ -31,7 +31,7 @@ if __name__=='__main__':
     w_pixels = int(width*DPI)
 
     csvpath = rawdefault("Path to CSV", str, "grid.csv")
-    data = [x for x in csv.reader(open(csvpath))]#, delimiter=";")]
+    data = [x for x in csv.reader(open(csvpath)), delimiter=";")]
     data = [[float(c) for c in r] for r in data]
 
     # normalize data between 0 and 1
