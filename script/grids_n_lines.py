@@ -6,7 +6,9 @@ BOX_WIDTH = 600*2
 
 # lines & checkerboard
 
-def lines(width, density=0.5):
+def lines(width, density=0.5, box_width=None):
+    if box_width is None:
+        box_width = BOX_WIDTH
     period = width / density
 
     rem = period % 1.0
@@ -14,14 +16,16 @@ def lines(width, density=0.5):
 
     period = int(period)
 
-    out = numpy.zeros((BOX_WIDTH,BOX_WIDTH), dtype=numpy.bool)
+    out = numpy.zeros((box_width,box_width), dtype=numpy.bool)
     curx = 0
-    while curx<BOX_WIDTH-width:
+    while curx<box_width-width:
         out[:,curx:curx+width] = True
         curx += period
     return out
 
-def grid(width, density=0.5):
+def grid(width, density=0.5, box_width=None):
+    if box_width is None:
+        box_width = BOX_WIDTH
     period = width * ((1 + numpy.sqrt(1-density))/density)
 
     rem = period % 1.0
@@ -29,13 +33,13 @@ def grid(width, density=0.5):
 
     period = int(period)
 
-    out = numpy.zeros((BOX_WIDTH,BOX_WIDTH), dtype=numpy.bool)
+    out = numpy.zeros((box_width,box_width), dtype=numpy.bool)
     curx = 0
-    while curx<BOX_WIDTH-width:
+    while curx<box_width-width:
         out[:,curx:curx+width] = True
         curx += period
     cury = 0
-    while cury<BOX_WIDTH-width:
+    while cury<box_width-width:
         out[cury:cury+width] = True
         cury += period
     return out

@@ -7,8 +7,10 @@ import numpy
 
 LABEL_HEIGHT = BOX_WIDTH
 
-def random(width, density):
-    smw = BOX_WIDTH/width
+def random(width, density, box_width=None):
+    if box_width is None:
+        box_width = BOX_WIDTH
+    smw = box_width/width
     sm = numpy.zeros((smw, smw))
     npix = smw*smw
     nwht = density * npix
@@ -20,9 +22,9 @@ def random(width, density):
     numpy.random.shuffle(sm.reshape(numpy.product(sm.shape)))
     print sm.shape
 
-    #resize to BOX WIDTH
-    out = numpy.zeros((BOX_WIDTH, BOX_WIDTH), numpy.bool)
-    idxes = numpy.linspace(0, smw, BOX_WIDTH, endpoint=False).astype(int)
+    #resize to box width
+    out = numpy.zeros((box_width, box_width), numpy.bool)
+    idxes = numpy.linspace(0, smw, box_width, endpoint=False).astype(int)
     out[:] = sm[idxes.reshape((-1,1)),idxes]
     return out
 
