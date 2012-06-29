@@ -27,7 +27,7 @@ def lines(width, density=0.5, box_width=None):
 def grid(width, density=0.5, box_width=None):
     if box_width is None:
         box_width = BOX_WIDTH
-    period = width * ((1 + numpy.sqrt(1-density))/density)
+    period = width * ((1 + numpy.sqrt(1-density))/max(0.00000001, density))
 
     rem = period % 1.0
     print 'ERROR: %.2f%%' % (100*rem/period)
