@@ -21,6 +21,7 @@ def lines(width, density=0.5, box_width=None):
     while curx<box_width-width:
         out[:,curx:curx+width] = True
         curx += period
+    out[:,curx:] = True
     return out
 
 def grid(width, density=0.5, box_width=None):
@@ -38,10 +39,12 @@ def grid(width, density=0.5, box_width=None):
     while curx<box_width-width:
         out[:,curx:curx+width] = True
         curx += period
+    out[:,curx:] = True
     cury = 0
     while cury<box_width-width:
         out[cury:cury+width] = True
         cury += period
+    out[cury:] = True
     return out
 
 if __name__=='__main__':
