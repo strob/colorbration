@@ -32,6 +32,12 @@ if __name__=='__main__':
 
     csvpath = rawdefault("Path to CSV", str, "grid.csv")
     data = [x for x in csv.reader(open(csvpath))]#, delimiter=";")]
+    data = [[float(c) for c in r] for r in data]
+
+    # normalize data between 0 and 1
+    data = numpy.array(data)
+    data -= data.min()
+    data /= data.max()
 
     BW = int(w_pixels / len(data[0]))
 
@@ -42,7 +48,7 @@ if __name__=='__main__':
     linewidth = rawdefault("Line width in pixels", int, "20")
     fn = rawdefault("Dithering method (grid|lines|random|randomfn)", eval, "randomfn")
 
-    out = numpy.zeros((h_pixels, w_pixels), dtype=numpy.uint8)
+    out = 255*numpy.ones((h_pixels, w_pixels), dtype=numpy.uint8)
     for r in range(len(data)):
         for c in range(len(data[0])):
             print r,c,data[r][c]
