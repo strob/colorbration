@@ -9,7 +9,7 @@ BOX_WIDTH = 600*2
 def lines(width, density=0.5, box_width=None):
     if box_width is None:
         box_width = BOX_WIDTH
-    period = width / density
+    period = width / max(0.0000001, density)
 
     rem = period % 1.0
     print 'ERROR: %.2f%%' % (100*rem/period)
