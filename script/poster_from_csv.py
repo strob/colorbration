@@ -9,6 +9,8 @@ def csvnorm(csvpath):
     "; -> ,"
     f = open(csvpath).read()
     if ';' in f:
+        # who can work with the french ...
+        f = f.replace(',', '.')
         f = f.replace(';', ',')
     return f.strip().split('\n')
 
