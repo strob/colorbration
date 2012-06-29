@@ -5,8 +5,21 @@ import cv2
 import grids_n_lines
 import density_n_linewidth
 
+def csvnorm(csvpath):
+    "; -> ,"
+    f = open(csvpath).read()
+    if ';' in f:
+        f = f.replace(';', ',')
+    return f.strip().split('\n')
+
 def get_density(measured, lightest=1, darkest=0):
     return darkest + (1.0 - measured) * (lightest - darkest) # naive
+
+def fail(msg):
+    print msg
+    import pdb; pdb.set_trace()
+    import sys; sys.exit(1)
+
 
 if __name__=='__main__':
     import csv
@@ -34,13 +47,11 @@ if __name__=='__main__':
     w_pixels = int(width*DPI)
 
     csvpath = rawdefault("Path to CSV", str, "grid.csv")
-    data = [x for x in csv.reader(open(csvpath), delimiter=";")]
-    data = [[float(c) for c in r] for r in data]
-
-    # normalize data between 0 and 1
+    data = [x for x in csv.reader(csvnorm(csvpath))]
+    data = [numpy.array([float(c) for c in r]) for r in data]
     data = numpy.array(data)
-    data -= data.min()
-    data /= data.max()
+    if data.min() < 0 or data.max() > 1:
+        fail('values not normalized')
 
     rot90 = rawdefault("Rotate 90 degrees?", bool, "")
     if rot90:
@@ -56,13 +67,10 @@ if __name__=='__main__':
     linewidth = rawdefault("Line width in pixels", int, "20")
     fn = rawdefault("Dithering method (grid|lines|random|randomfn)", eval, "randomfn")
 
-    darkest = rawdefault("Darkest, 0=black 1=white", float, "0.0")
-    lightest = rawdefault("Lightest, 0=black 1=white", float, "1.0")
-
     out = 255*numpy.ones((h_pixels, w_pixels), dtype=numpy.uint8)
     for r in range(len(data)):
         for c in range(len(data[0])):
             print r,c,data[r][c]
-            out[r*BW:(r+1)*BW, c*BW:(c+1)*BW] = 255*fn(linewidth, get_density(float(data[r][c]), lightest, darkest), box_width=BW)
+            out[r*BW:(r+1)*BW, c*BW:(c+1)*BW] = 255*fn(linewidth, data[r,c], box_width=BW)
 
     cv2.imwrite('poster.tif', out)
