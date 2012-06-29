@@ -29,7 +29,8 @@ if __name__=='__main__':
     randomfn = lambda x,y,**kw: randomchoice([grid,lines,random])(x,y,**kw)
 
     DPI = rawdefault("DPI", int, "600")
-    width = rawdefault("Poster width in inches", float, "91.0")
+    w_cm = rawdefault("Poster width in CM", float, "91.0")
+    width = w_cm / 2.54
     w_pixels = int(width*DPI)
 
     csvpath = rawdefault("Path to CSV", str, "grid.csv")
