@@ -14,7 +14,7 @@ def lines(width, density=0.5, box_width=None):
     rem = period % 1.0
     print 'ERROR: %.2f%%' % (100*rem/period)
 
-    period = int(period)
+    period = int(numpy.ceil(period))
 
     out = numpy.zeros((box_width,box_width), dtype=numpy.bool)
     curx = 0
@@ -32,7 +32,7 @@ def grid(width, density=0.5, box_width=None):
     rem = period % 1.0
     print 'ERROR: %.2f%%' % (100*rem/period)
 
-    period = int(period)
+    period = int(numpy.ceil(period))
 
     out = numpy.zeros((box_width,box_width), dtype=numpy.bool)
     curx = 0
