@@ -1,12 +1,13 @@
-import Image
+import cv2
 import csv
+import numpy
 
 def imgToCSV(imgpath, csvpath):
-    im = Image.open(imgpath)
-    writer = csv.writer(open(csvpath, 'w'))
+    im = cv2.imread(imgpath, -1) # load as-is: this allows for 16-bit images to import correctly
+    writer = csv.writer(open(csvpath, 'w'), delimiter=';')
 
-    for row in range(im.size[1]):
-        writer.writerow(reduce(lambda x,y: x+list(im.getpixel((y,row))), range(im.size[0]), []))
+    for row in im:
+        writer.writerow(numpy.concatenate(row).tolist())
 
 if __name__=='__main__':
     import sys
