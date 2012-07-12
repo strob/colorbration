@@ -7,9 +7,10 @@ def imgToCSV(imgpath, csvpath):
     writer = csv.writer(open(csvpath, 'w'), delimiter=';')
 
     for row in im:
-        writer.writerow(numpy.concatenate(row).tolist())
+        if len(row.shape) > 1:
+            row = numpy.concatenate(row)
+        writer.writerow(row.tolist())
 
 if __name__=='__main__':
-    import sys
-    for p in sys.argv[1:]:
-        imgToCSV(p, p + '.csv')
+    filename = raw_input('filename > ')
+    imgToCSV(filename, filename + '.csv')
